@@ -1,0 +1,10 @@
+---
+- name: create cloudflare-ddns container
+  containers.podman.podman_container:
+    name: cloudflare-ddns
+    image: "docker.io/favonia/cloudflare-ddns:latest"
+    network: web
+    env:
+      CF_API_TOKEN: "{{ cloudflare_key }}"
+      DOMAINS: "d513.space"
+  notify: "restart cloudflare ddns service"

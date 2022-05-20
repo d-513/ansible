@@ -2,13 +2,9 @@
 - name: create bitwarden container
   containers.podman.podman_container:
     name: bitwarden
-    image: docker.io/vaultwarden/server
-    state: created
+    image: docker.io/vaultwarden/server:latest
     network: web
     env:
       SIGNUPS_ALLOWED: "false"
     volumes: /srv/vaultwarden:/data
-    generate_systemd:
-      path: /etc/systemd/system/
-    timezone: "{{ podman_timezone }}"
   notify: "restart bitwarden service"

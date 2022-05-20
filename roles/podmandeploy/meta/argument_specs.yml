@@ -30,6 +30,9 @@ argument_specs:
         type: bool
         description: "Whether to deploy Caddy (Required for Web-Based services)"
       # Cloudflare
+      cloudflare_ddns_deploy:
+        type: str
+        description: "Whether to use cloudflare DDNS"
       cloudflare_ssl:
         type: bool
         description: "Whether to use cloudflare for SSL"

@@ -8,6 +8,8 @@
     name: web
 - include_tasks: pihole.yml
   when: pihole_deploy
+- include_tasks: cloudflare-ddns.yml
+  when: cloudflare_ddns_deploy
 - include_tasks: caddy.yml
   when: caddy_deploy
 - include_tasks: bitwarden.yml

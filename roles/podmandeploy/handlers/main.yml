@@ -23,3 +23,9 @@
     state: restarted
     enabled: true
     daemon_reload: true
+- name: "restart cloudflare ddns service"
+  systemd:
+    name: "container-cloudflare-ddns.service"
+    state: restarted
+    enabled: true
+    daemon_reload: true

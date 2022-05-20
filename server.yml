@@ -2,3 +2,11 @@
 - hosts: all
   roles:
     - { role: podmandeploy }
+  module_defaults:
+    containers.podman.podman_container:
+      generate_systemd:
+        path: /etc/systemd/system/
+      state: created
+      timezone: "{{ podman_timezone }}"
+      labels:
+        io.containers.autoupdate: registry

@@ -7,7 +7,7 @@
     - data
     - config
 - set_fact:
-    caddy_image: docker.io/library/caddy
+    caddy_image: docker.io/library/caddy:latest
 - name: cloudflare ssl
   import_tasks: ext/cloudflare_ssl.yml
   when: cloudflare_ssl
@@ -18,11 +18,8 @@
 - name: create caddy container
   containers.podman.podman_container:
     name: caddy
-    state: created
     image: "{{ caddy_image }}"
     network: web
-    generate_systemd:
-      path: /etc/systemd/system/
     volumes:
       - /srv/caddy/data/:/data
       - /srv/caddy/Caddyfile:/etc/caddy/Caddyfile
@@ -32,5 +29,4 @@
       - "443:443"
     env:
       CF_API_TOKEN: "{{ cloudflare_key }}"
-    timezone: "{{ podman_timezone }}"
   notify: "restart caddy service"
