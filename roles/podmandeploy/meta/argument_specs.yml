@@ -1,0 +1,55 @@
+---
+argument_specs:
+  main:
+    short_description: Podman Deployer
+    options:
+      podman_storage_driver:
+        type: str
+        description: "Podman Storage Driver"
+        default: "overlay"
+      podman_timezone:
+        type: str
+        description: "Timezone for Podman"
+        default: "UTC"
+      main_domain:
+        type: str
+        required: true
+        description: "The main domain to be used for caddy and other things."
+      v4_lan:
+        type: str
+        description: "IPV4 CIDR for restricting some services to lan"
+      # Pi-Hole
+      pihole_deploy:
+        type: bool
+        description: "Whether to deploy Pi-Hole"
+      pihole_password:
+        type: str
+        description: "Password for Pi-Hole"
+      # Caddy
+      caddy_deploy:
+        type: bool
+        description: "Whether to deploy Caddy (Required for Web-Based services)"
+      # Cloudflare
+      cloudflare_ssl:
+        type: bool
+        description: "Whether to use cloudflare for SSL"
+      cloudflare_key:
+        type: str
+        description: "API Key for Cloudflare"
+      # LLDAP
+      lldap_deploy:
+        type: bool
+        description: "Whether to deploy LLDAP"
+      lldap_jwt_secret:
+        type: str
+        description: "JWT Secret for LDAP. See jwtgen.sh"
+      lldap_admin_password:
+        type: str
+        description: "Admin password for LLDAP"
+      lldap_base_dn:
+        type: str
+        description: "LLDAP base DN"
+      # Bitwarden
+      bitwarden_deploy:
+        type: bool
+        description: "Whether to deploy Vaultwarden"

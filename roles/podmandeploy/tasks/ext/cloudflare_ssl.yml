@@ -1,0 +1,12 @@
+---
+- name: copy dockerfile to build caddy cloudflare image
+  when: cloudflare_ssl
+  copy:
+    src: Dockerfile.caddy-cloudflare
+    dest: /srv/caddy/Dockerfile
+- name: build caddy cloudflare image
+  containers.podman.podman_image:
+    name: caddy-custom
+    path: /srv/caddy
+- set_fact:
+    caddy_image: caddy-custom

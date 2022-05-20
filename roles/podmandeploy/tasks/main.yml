@@ -1,0 +1,16 @@
+---
+- name: setup podman storage.conf
+  template:
+    src: storage.conf.j2
+    dest: /etc/containers/storage.conf
+- name: create podman network
+  containers.podman.podman_network:
+    name: web
+- include_tasks: pihole.yml
+  when: pihole_deploy
+- include_tasks: caddy.yml
+  when: caddy_deploy
+- include_tasks: bitwarden.yml
+  when: bitwarden_deploy
+- include_tasks: lldap.yml
+  when: lldap_deploy

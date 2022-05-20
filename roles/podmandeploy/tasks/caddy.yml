@@ -1,0 +1,36 @@
+---
+- name: prepare dir
+  file:
+    path: /srv/caddy/{{ item }}
+    state: directory
+  loop:
+    - data
+    - config
+- set_fact:
+    caddy_image: docker.io/library/caddy
+- name: cloudflare ssl
+  import_tasks: ext/cloudflare_ssl.yml
+  when: cloudflare_ssl
+- name: template Caddyfile
+  template:
+    src: Caddyfile.j2
+    dest: /srv/caddy/Caddyfile
+- name: create caddy container
+  containers.podman.podman_container:
+    name: caddy
+    state: created
+    image: "{{ caddy_image }}"
+    network: web
+    generate_systemd:
+      path: /etc/systemd/system/
+    volumes:
+      - /srv/caddy/data/:/data
+      - /srv/caddy/Caddyfile:/etc/caddy/Caddyfile
+      - /srv/caddy/config:/config
+    publish:
+      - "80:80"
+      - "443:443"
+    env:
+      CF_API_TOKEN: "{{ cloudflare_key }}"
+    timezone: "{{ podman_timezone }}"
+  notify: "restart caddy service"

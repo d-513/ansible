@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "*.j2": "plaintext"
+    },
+    "[plaintext]": {
+        "editor.formatOnSave": true
+    }
+}

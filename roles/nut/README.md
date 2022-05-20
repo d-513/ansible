@@ -1,0 +1,1 @@
+# NetworkUpsTools (NUT) deploy role
