@@ -37,3 +37,7 @@
       RCON_PASSWORD: "{{ mc_rcon_password }}"
       PACKWIZ_URL: "https://zekesmith.github.io/HexMC/1.18.2/pack.toml"
   notify: "restart mc server service"
+- name: copy minimotd config
+  copy: 
+    src: minimotd.conf
+    dest: /srv/mc-server/data/config/MiniMOTD/main.conf
