@@ -7,6 +7,9 @@ argument_specs:
         type: str
         description: "Podman Storage Driver"
         default: "overlay"
+      podman_zfs_fsname:
+        type: str
+        description: "Podman ZFS driver fsname"
       podman_timezone:
         type: str
         description: "Timezone for Podman"
@@ -56,3 +59,10 @@ argument_specs:
       bitwarden_deploy:
         type: bool
         description: "Whether to deploy Vaultwarden"
+      # Craft
+      mc_deploy:
+        type: bool
+        description: "Whether to deploy HexMC server"
+      mc_rcon_password:
+        type: str
+        description: "Password for HexMC rcon"

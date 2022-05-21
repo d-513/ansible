@@ -1,0 +1,39 @@
+---
+- name: create dirs
+  file:
+    path: "/srv/mc-server/{{ item }}"
+    state: directory
+  loop:
+    - data
+    - extras
+- name: install mods
+  copy:
+    src: mc_mods.txt
+    dest: /srv/mc-server/extras/mods.txt
+- name: create mc-server container
+  containers.podman.podman_container:
+    name: mc-server
+    interactive: yes
+    tty: yes
+    image: "docker.io/itzg/minecraft-server:java17-alpine"
+    ports:
+      - "25565:25565"
+      - "25575:25575"
+    volumes:
+      - /srv/mc-server/data:/data
+      - /srv/mc-server/extras:/extras
+    env:
+      EULA: "TRUE"
+      VERSION: "1.18.2"
+      TYPE: "fabric"
+      MODS_FILE: "/extras/mods.txt"
+      EXEC_DIRECTLY: "true"
+      ENABLE_RCON: "true"
+      MEMORY: "14G"
+      USE_AIKAR_FLAGS: "true"
+      ENABLE_RCON: "true"
+      MAX_PLAYERS: "30"
+      VIEW_DISTANCE: "10"
+      RCON_PASSWORD: "{{ mc_rcon_password }}"
+      PACKWIZ_URL: "https://zekesmith.github.io/HexMC/1.18.2/pack.toml"
+  notify: "restart mc server service"

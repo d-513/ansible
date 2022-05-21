@@ -29,3 +29,9 @@
     state: restarted
     enabled: true
     daemon_reload: true
+- name: "restart mc server service"
+  systemd:
+    name: "container-mc-server.service"
+    state: restarted
+    enabled: true
+    daemon_reload: true

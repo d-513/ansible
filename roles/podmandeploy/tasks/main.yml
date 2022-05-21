@@ -16,3 +16,5 @@
   when: bitwarden_deploy
 - include_tasks: lldap.yml
   when: lldap_deploy
+- include_tasks: mc-server.yml
+  when: mc_deploy
