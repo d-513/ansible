@@ -21,3 +21,5 @@
     env:
       WEBPASSWORD: "{{ pihole_password }}"
   notify: "restart pihole service"
+  environment:
+    PODMAN_SYSTEMD_UNIT: "container-pihole.service"

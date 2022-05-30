@@ -1,0 +1,14 @@
+---
+- name: prepare dir
+  file:
+    path: /srv/redis
+    state: directory
+- name: create redis container
+  containers.podman.podman_container:
+    name: redis
+    image: docker.io/library/redis:alpine
+    network: web
+    volumes: /srv/redis:/data
+  notify: "restart redis service"
+  environment:
+    PODMAN_SYSTEMD_UNIT: "container-redis.service"

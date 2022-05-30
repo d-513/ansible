@@ -1,12 +1,17 @@
 ---
 - hosts: all
   roles:
-    - { role: podmandeploy }
+    - { role: server }
   module_defaults:
     containers.podman.podman_container:
       generate_systemd:
         path: /etc/systemd/system/
       state: created
       timezone: "{{ podman_timezone }}"
+      ipc: shareable
       labels:
         io.containers.autoupdate: registry
+    containers.podman.podman_pod:
+      generate_systemd:
+        path: /etc/systemd/system/
+      state: created

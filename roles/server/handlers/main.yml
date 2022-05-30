@@ -1,4 +1,10 @@
 ---
+- name: "restart mariadb service"
+  systemd:
+    name: "container-mariadb.service"
+    state: restarted
+    enabled: true
+    daemon_reload: true
 - name: "restart pihole service"
   systemd:
     name: "container-pihole.service"
@@ -23,15 +29,39 @@
     state: restarted
     enabled: true
     daemon_reload: true
+- name: "restart authelia service"
+  systemd:
+    name: "container-authelia.service"
+    state: restarted
+    enabled: true
+    daemon_reload: true
 - name: "restart cloudflare ddns service"
   systemd:
     name: "container-cloudflare-ddns.service"
     state: restarted
     enabled: true
     daemon_reload: true
-- name: "restart mc server service"
+- name: "restart redis service"
   systemd:
-    name: "container-mc-server.service"
+    name: "container-redis.service"
+    state: restarted
+    enabled: true
+    daemon_reload: true
+- name: "restart postgres service"
+  systemd:
+    name: "container-postgres.service"
+    state: restarted
+    enabled: true
+    daemon_reload: true
+- name: "enable nextcloudcron timer"
+  systemd:
+    name: "nextcloudcron.timer"
+    state: started
+    enabled: true
+    daemon_reload: true
+- name: "restart nextcloud service"
+  systemd:
+    name: "container-nextcloud.service"
     state: restarted
     enabled: true
     daemon_reload: true

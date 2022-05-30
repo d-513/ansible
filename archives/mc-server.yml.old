@@ -16,6 +16,8 @@
     interactive: yes
     tty: yes
     image: "docker.io/itzg/minecraft-server:java17-alpine"
+    # generate_systemd:
+    #   restart_policy: always
     ports:
       - "25565:25565"
       - "25575:25575"
@@ -31,13 +33,8 @@
       ENABLE_RCON: "true"
       MEMORY: "14G"
       USE_AIKAR_FLAGS: "true"
-      ENABLE_RCON: "true"
       MAX_PLAYERS: "30"
       VIEW_DISTANCE: "10"
       RCON_PASSWORD: "{{ mc_rcon_password }}"
       PACKWIZ_URL: "https://zekesmith.github.io/HexMC/1.18.2/pack.toml"
   notify: "restart mc server service"
-- name: copy minimotd config
-  copy: 
-    src: minimotd.conf
-    dest: /srv/mc-server/data/config/MiniMOTD/main.conf

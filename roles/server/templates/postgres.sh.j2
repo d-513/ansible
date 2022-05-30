@@ -1,0 +1,5 @@
+#!/bin/bash
+
+{% if synapse_deploy == true %}
+createdb --encoding=UTF8 --locale=C --template=template0 synapse
+{% endif %}

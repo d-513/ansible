@@ -18,3 +18,5 @@
       LLDAP_LDAP_USER_PASS: "{{ lldap_admin_password }}"
       LLDAP_LDAP_BASE_DN: "{{ lldap_base_dn }}"
   notify: "restart lldap service"
+  environment:
+    PODMAN_SYSTEMD_UNIT: "container-lldap.service"

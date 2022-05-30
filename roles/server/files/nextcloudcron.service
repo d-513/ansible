@@ -1,0 +1,6 @@
+[Unit]
+Description=Nextcloud cron.php job
+
+[Service]
+ExecStart=/usr/bin/podman container exec -it nextcloud su -l www-data -s /bin/sh -c 'PHP_MEMORY_LIMIT=512M php -f /var/www/html/cron.php'
+KillMode=process

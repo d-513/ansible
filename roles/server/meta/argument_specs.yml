@@ -1,7 +1,7 @@
 ---
 argument_specs:
   main:
-    short_description: Podman Deployer
+    short_description: Server
     options:
       podman_storage_driver:
         type: str
@@ -21,6 +21,42 @@ argument_specs:
       v4_lan:
         type: str
         description: "IPV4 CIDR for restricting some services to lan"
+      ### DATABASES
+
+      # Mariadb
+      mariadb_deploy:
+        type: bool
+        description: "Whether to deploy MariaDB"
+      mariadb_password:
+        type: str
+        description: "Password for MariaDB"
+      # Redis
+      redis_deploy:
+        type: bool
+        description: "Whether to deploy redis"
+      # LLDAP
+      lldap_deploy:
+        type: bool
+        description: "Whether to deploy LLDAP"
+      lldap_jwt_secret:
+        type: str
+        description: "JWT Secret for LDAP. See jwtgen.sh"
+      lldap_admin_password:
+        type: str
+        description: "Admin password for LLDAP"
+      lldap_base_dn:
+        type: str
+        description: "LLDAP base DN"
+      # Postgres
+      postgres_deploy:
+        type: bool
+        description: "Whether to deploy Postgresql"
+      postgres_password:
+        type: str
+        description: "Password for postgres"
+
+      ### SERVICES
+
       # Pi-Hole
       pihole_deploy:
         type: bool
@@ -42,27 +78,29 @@ argument_specs:
       cloudflare_key:
         type: str
         description: "API Key for Cloudflare"
-      # LLDAP
-      lldap_deploy:
+
+      # Authelia
+      authelia_deploy:
         type: bool
-        description: "Whether to deploy LLDAP"
-      lldap_jwt_secret:
+        default: false
+        description: "Whether to deploy Authelia"
+      authelia_session_secret:
         type: str
-        description: "JWT Secret for LDAP. See jwtgen.sh"
-      lldap_admin_password:
+        description: "Authelia session secret"
+      authelia_jwt_secret:
         type: str
-        description: "Admin password for LLDAP"
-      lldap_base_dn:
+        description: "Authelia JWT"
+      authelia_storage_key:
         type: str
-        description: "LLDAP base DN"
+        description: "Authelia storage key"
       # Bitwarden
       bitwarden_deploy:
         type: bool
         description: "Whether to deploy Vaultwarden"
-      # Craft
-      mc_deploy:
+      # Nextcloud
+      nextcloud_deploy:
         type: bool
-        description: "Whether to deploy HexMC server"
-      mc_rcon_password:
+        description: "Whether to deploy Nextcloud"
+      nextcloud_admin_password:
         type: str
-        description: "Password for HexMC rcon"
+        description: "Admin pass for Nextcloud"

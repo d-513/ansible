@@ -1,0 +1,5 @@
+{% if nextcloud_deploy %}
+CREATE DATABASE IF NOT EXISTS nextcloud;
+{% endif %}
+
+GRANT ALL PRIVILEGES ON *.* TO 'sqluser'@'%';

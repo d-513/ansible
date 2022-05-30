@@ -6,10 +6,11 @@
   loop:
     - data
     - config
+    - config/static
 - set_fact:
     caddy_image: docker.io/library/caddy:latest
 - name: cloudflare ssl
-  import_tasks: ext/cloudflare_ssl.yml
+  import_tasks: ../ext/cloudflare_ssl.yml
   when: cloudflare_ssl
 - name: template Caddyfile
   template:
@@ -29,4 +30,5 @@
       - "443:443"
     env:
       CF_API_TOKEN: "{{ cloudflare_key }}"
+    labels:
   notify: "restart caddy service"

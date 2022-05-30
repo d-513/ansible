@@ -1,0 +1,27 @@
+---
+- name: prepare dir
+  file:
+    path: "/srv/postgres/{{ item }}"
+    state: directory
+  loop:
+    - data
+    - init
+- name: template dbs
+  template:
+    src: postgres.sh.j2
+    dest: /srv/postgres/init/postgres.sh
+- name: create mariadb container
+  containers.podman.podman_container:
+    name: mariadb
+    image: docker.io/library/postgres:13
+    network: web
+    publish:
+      - "5432:5432"
+    env:
+      POSTGRES_PASSWORD: "{{ postgres_password }}"
+    volumes:
+      - /srv/postgres/data:/var/lib/postgresql/data
+      - /srv/postgres/init:/docker-entrypoint-initdb.d
+  notify: "restart postgres service"
+  environment:
+    PODMAN_SYSTEMD_UNIT: "container-postgres.service"

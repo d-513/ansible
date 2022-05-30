@@ -1,0 +1,32 @@
+---
+- name: setup podman storage.conf
+  template:
+    src: storage.conf.j2
+    dest: /etc/containers/storage.conf
+- name: create podman network
+  containers.podman.podman_network:
+    name: web
+# DB
+- include_tasks: databases/lldap.yml
+  when: lldap_deploy
+- include_tasks: databases/mariadb.yml
+  when: mariadb_deploy
+- include_tasks: databases/redis.yml
+  when: redis_deploy
+- include_tasks: databases/postgres.yml
+  when: postgres_deploy
+# Services
+- include_tasks: services/pihole.yml
+  when: pihole_deploy
+- include_tasks: services/cloudflare-ddns.yml
+  when: cloudflare_ddns_deploy
+- include_tasks: services/caddy.yml
+  when: caddy_deploy
+- include_tasks: services/bitwarden.yml
+  when: bitwarden_deploy
+- include_tasks: services/authelia.yml
+  when: authelia_deploy
+- include_tasks: services/nextcloud.yml
+  when: nextcloud_deploy
+# - include_tasks: services/mc-server.yml
+#   when: mc_deploy
