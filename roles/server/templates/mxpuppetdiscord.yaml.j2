@@ -1,0 +1,155 @@
+bridge:
+  # Port to host the bridge on
+  # Used for communication between the homeserver and the bridge
+  port: 8008
+
+  # The host connections to the bridge's webserver are allowed from
+  bindAddress: 0.0.0.0
+
+  # Public domain of the homeserver
+  domain: "{{ main_domain }}"
+
+  # Reachable URL of the Matrix homeserver
+  homeserverUrl: "http://synapse:8008"
+
+
+  # Display name of the bridge bot
+  displayname: Discord Puppet Bridge
+
+  # Whether to create groups for each Discord Server
+  #
+  # Note that 'enable_group_creation' must be 'true' in Synapse's config
+  # for this to work
+  enableGroupSync: true
+
+presence:
+  # Bridge Discord online/offline status
+  enabled: true
+
+  # How often to send status to the homeserver in milliseconds
+  interval: 500
+
+provisioning:
+  # Regex of Matrix IDs allowed to use the puppet bridge
+  whitelist:
+    - "@.*:{{ main_domain }}"
+
+relay:
+  # Regex of Matrix IDs who are allowed to use the bridge in relay mode.
+  # Relay mode is when a single Discord bot account relays messages of
+  # multiple Matrix users
+  #
+  # Same format as in provisioning
+  whitelist:
+    - "@.*:{{ main_domain }}"
+
+selfService:
+  # Regex of Matrix IDs who are allowed to use bridge self-servicing (plumbed rooms)
+  #
+  # Same format as in provisioning
+  whitelist:
+    - "@.*:{{ main_domain }}"
+
+  #blacklist:
+    #- "@user:server\\.com"
+
+
+namePatterns:
+  # The default displayname for a bridged user
+  #
+  # Available variables:
+  #
+  # name: username of the user
+  # discriminator: hashtag of the user (ex. #1234)
+  user: :name
+
+  # A user's guild-specific displayname - if they've set a custom nick in
+  # a guild
+  #
+  # Available variables:
+  #
+  # name: username of the user
+  # discriminator: hashtag of the user (ex. #1234)
+  # displayname: the user's custom group-specific nick
+  # channel: the name of the channel
+  # guild: the name of the guild
+  userOverride: :displayname
+
+  # Room names for bridged Discord channels
+  #
+  # Available variables:
+  #
+  # name: name of the channel
+  # guild: name of the guild
+  # category: name of the category if existant
+  room: :name
+
+  # Group names for bridged Discord servers
+  #
+  # Available variables:
+  #
+  # name: name of the guide
+  group: :name
+
+database:
+  # Use Postgres as a database backend. If set, will be used instead of SQLite3
+  #
+  # Connection string to connect to the Postgres instance
+  # with username "user", password "pass", host "localhost" and database name "dbname".
+  #
+  # Modify each value as necessary
+  connString: "postgres://postgres:{{ postgres_password }}@postgres/discordpuppet?sslmode=disable"
+
+  # Use SQLite3 as a database backend
+  #
+  # The name of the database file
+  #filename: database.db
+
+limits:
+  # Up to how many users should be auto-joined on room creation? -1 to disable
+  # auto-join functionality
+  #
+  # Defaults to 200
+  #maxAutojoinUsers: 200
+
+  # How long the delay between two auto-join users should be in milliseconds
+  #
+  # Defaults to 5000
+  #roomUserAutojoinDelay: 5000
+
+logging:
+  # Log level of console output
+  #
+  # Allowed values starting with most verbose:
+  # silly, verbose, info, warn, error
+  console: info
+
+  # Date and time formatting
+  lineDateFormat: MMM-D HH:mm:ss.SSS
+
+  # Logging files
+  #
+  # Log files are rotated daily by default
+  files:
+    # Log file path
+    - file: "bridge.log"
+      # Log level for this file
+      #
+      # Allowed values starting with most verbose:
+      # silly, debug, verbose, info, warn, error
+      level: info
+
+      # Date and time formatting
+      datePattern: YYYY-MM-DD
+
+      # Maximum number of logs to keep.
+      #
+      # This can be a number of files or number of days.
+      # If using days, add 'd' as a suffix
+      maxFiles: 14d
+
+      # Maximum size of the file after which it will rotate.
+      # This can be a number of bytes, or units of kb, mb, and gb.
+
+      # If using units, add 'k', 'm', or 'g' as the suffix
+      maxSize: 50m

@@ -6,6 +6,10 @@
 - name: create podman network
   containers.podman.podman_network:
     name: web
+- name: copy uninstall-container script
+  copy:
+    src: uninstall-container.sh
+    dest: /usr/local/bin/uninstall-container
 # DB
 - include_tasks: databases/lldap.yml
   when: lldap_deploy
@@ -28,5 +32,10 @@
   when: authelia_deploy
 - include_tasks: services/nextcloud.yml
   when: nextcloud_deploy
+- include_tasks: services/synapse.yml
+  when: synapse_deploy
+# Custom
+- include_tasks: custom/polymcbot.yml
+  when: polymcbot_deploy
 # - include_tasks: services/mc-server.yml
 #   when: mc_deploy

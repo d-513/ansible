@@ -1,0 +1,67 @@
+---
+- name: create dirs
+  file:
+    path: "/srv/mx/{{ item }}"
+    state: directory
+  loop:
+    - synapse
+    - puppet-discord
+- name: check if config generated
+  stat:
+    path: /srv/mx/synapse/homeserver.yaml
+  register: hs_test
+- name: generate config
+  containers.podman.podman_container:
+    name: config-gen
+    image: docker.io/matrixdotorg/synapse:latest
+    generate_systemd: {}
+    rm: true
+    state: started
+    command: generate
+    volumes: /srv/mx/synapse:/data
+    env:
+      SYNAPSE_SERVER_NAME: "{{ main_domain }}"
+      SYNAPSE_REPORT_STATS: "no"
+  when: not hs_test.stat.exists
+- name: create caddy .well-known/matrix/server
+  file:
+    path: /srv/caddy/config/static/.well-known/matrix
+    state: directory
+- name: template .well-known/matrix/server
+  template:
+    src: matrix_server.j2
+    dest: /srv/caddy/config/static/.well-known/matrix/server
+- name: template homeserver.yaml
+  template:
+    src: homeserver.yaml.j2
+    dest: /srv/mx/synapse/homeserver.yaml
+- name: create synapse container
+  containers.podman.podman_container:
+    name: synapse
+    image: docker.io/matrixdotorg/synapse:latest
+    network: web
+    volumes: /srv/mx/synapse:/data
+    generate_systemd:
+      path: /etc/systemd/system
+      wants:
+        - container-postgres.service
+  notify: "restart synapse service"
+  environment:
+    PODMAN_SYSTEMD_UNIT: "container-synapse.service"
+- name: template configuration.yml for mx-puppet
+  template:
+    src: mxpuppetdiscord.yaml.j2
+    dest: /srv/mx/puppet-discord/config.yaml
+- name: create mx-puppet-discord container
+  containers.podman.podman_container:
+    name: mx-puppet-discord
+    image: registry.gitlab.com/mx-puppet/discord/mx-puppet-discord:latest
+    network: web
+    volumes: /srv/mx/puppet-discord:/data
+    generate_systemd:
+      path: /etc/systemd/system
+      wants:
+        - container-synapse.service
+  notify: "restart mx-puppet-discord service"
+  environment:
+    PODMAN_SYSTEMD_UNIT: "container-mx-puppet-discord.service"

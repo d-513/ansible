@@ -65,3 +65,21 @@
     state: restarted
     enabled: true
     daemon_reload: true
+- name: "restart synapse service"
+  systemd:
+    name: "container-synapse.service"
+    state: restarted
+    enabled: true
+    daemon_reload: true
+- name: "restart mx-puppet-discord service"
+  systemd:
+    name: "container-mx-puppet-discord.service"
+    state: restarted
+    enabled: true
+    daemon_reload: true
+- name: "restart polymcbot service"
+  systemd:
+    name: "container-polymcbot.service"
+    state: restarted
+    enabled: true
+    daemon_reload: true

@@ -11,3 +11,4 @@ authelia_deploy: false
 redis_deploy: false
 postgres_deploy: false
 synapse_deploy: false
+polymcbot_deploy: false

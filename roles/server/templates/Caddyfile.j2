@@ -52,6 +52,13 @@
 	}
 	{% endif %}
 
+	{% if synapse_deploy == true %}
+	@mx host mx.{{ main_domain }}
+	handle @mx {
+		reverse_proxy synapse:8008
+	}
+	{% endif %}
+
 	handle {
 		respond "<h1>FAIL Unauthorized resource access attempt. This incident will be reported</h1>"
 	}

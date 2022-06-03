@@ -10,9 +10,9 @@
   template:
     src: postgres.sh.j2
     dest: /srv/postgres/init/postgres.sh
-- name: create mariadb container
+- name: create postgres container
   containers.podman.podman_container:
-    name: mariadb
+    name: postgres
     image: docker.io/library/postgres:13
     network: web
     publish:

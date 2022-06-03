@@ -24,8 +24,3 @@ Services:
 - Nextcloud
 - Authelia
 - Postgres
-
-### `roles/custom`
-
-Custom services that aren't meant to be operated by most selfhosted users. These are discord bots for my servers, custom websites, etc  
-These will have minimal docs and support

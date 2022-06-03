@@ -7,6 +7,7 @@
       generate_systemd:
         path: /etc/systemd/system/
       state: created
+      #recreate: yes
       timezone: "{{ podman_timezone }}"
       ipc: shareable
       labels:
