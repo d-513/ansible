@@ -47,12 +47,6 @@
     state: restarted
     enabled: true
     daemon_reload: true
-- name: "restart postgres service"
-  systemd:
-    name: "container-postgres.service"
-    state: restarted
-    enabled: true
-    daemon_reload: true
 - name: "enable nextcloudcron timer"
   systemd:
     name: "nextcloudcron.timer"
@@ -62,18 +56,6 @@
 - name: "restart nextcloud service"
   systemd:
     name: "container-nextcloud.service"
-    state: restarted
-    enabled: true
-    daemon_reload: true
-- name: "restart synapse service"
-  systemd:
-    name: "container-synapse.service"
-    state: restarted
-    enabled: true
-    daemon_reload: true
-- name: "restart mx-puppet-discord service"
-  systemd:
-    name: "container-mx-puppet-discord.service"
     state: restarted
     enabled: true
     daemon_reload: true

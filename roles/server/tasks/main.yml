@@ -17,8 +17,6 @@
   when: mariadb_deploy
 - include_tasks: databases/redis.yml
   when: redis_deploy
-- include_tasks: databases/postgres.yml
-  when: postgres_deploy
 # Services
 - include_tasks: services/pihole.yml
   when: pihole_deploy
@@ -32,8 +30,6 @@
   when: authelia_deploy
 - include_tasks: services/nextcloud.yml
   when: nextcloud_deploy
-- include_tasks: services/synapse.yml
-  when: synapse_deploy
 # Custom
 - include_tasks: custom/polymcbot.yml
   when: polymcbot_deploy
