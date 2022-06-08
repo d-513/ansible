@@ -1,0 +1,60 @@
+{{ main_domain}} {
+	{% if cloudflare_ssl == true %}
+	tls {
+		dns cloudflare {env.CF_API_TOKEN}
+	}
+	{% endif %}
+
+	root * /config/static
+	file_server
+}
+
+*.{{ main_domain}} {
+	{% if cloudflare_ssl == true %}
+	tls {
+		dns cloudflare {env.CF_API_TOKEN}
+	}
+	{% endif %}
+
+	@denied not remote_ip {{ v4_lan }}
+
+	{% if lldap_deploy == true %}
+	@lldap host users.{{ main_domain}}
+	handle @lldap {
+		reverse_proxy lldap:17170 {
+			header_up X-Real-IP {remote_host}
+		}
+	}
+	{% endif %}
+
+	{% if authelia_deploy == true %}
+	@authelia host auth.{{ main_domain}}
+	handle @authelia {
+		reverse_proxy authelia:9091
+	}
+	{% endif %}
+
+	{% if bitwarden_deploy == true %}
+	@bw host bw.{{ main_domain}}
+	handle @bw {
+		reverse_proxy /notifications/hub bitwarden:3012
+
+		reverse_proxy bitwarden:80 {
+			header_up X-Real-IP {remote_host}
+		}
+	}
+	{% endif %}
+
+	{% if nextcloud_deploy == true %}
+	@nc host cloud.{{ main_domain}}
+	handle @nc {
+		redir /.well-known/carddav /remote.php/dav 301
+		redir /.well-known/caldav /remote.php/dav 301
+		reverse_proxy nextcloud:80
+	}
+	{% endif %}
+
+	handle {
+		respond "<h1>FAIL Unauthorized resource access attempt. This incident will be reported</h1>"
+	}
+}
