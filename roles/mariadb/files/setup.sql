@@ -1,0 +1,2 @@
+CREATE DATABASE IF NOT EXISTS nextcloud;
+GRANT ALL PRIVILEGES ON *.* TO 'sqluser'@'%';

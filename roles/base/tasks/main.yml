@@ -1,0 +1,12 @@
+---
+- name: setup podman storage.conf
+  template:
+    src: storage.conf.j2
+    dest: /etc/containers/storage.conf
+- name: create podman network
+  containers.podman.podman_network:
+    name: web
+- name: copy uninstall-container script
+  copy:
+    src: uninstall-container.sh
+    dest: /usr/local/bin/uninstall-container

@@ -1,0 +1,25 @@
+---
+- name: create dirs
+  file:
+    state: directory
+    path: "/srv/pihole/{{ item }}"
+  loop:
+    - config
+    - dnsmasq.d
+- name: create pihole container
+  containers.podman.podman_container:
+    name: pihole
+    image: docker.io/pihole/pihole:latest
+    volumes:
+      - /srv/pihole/config/:/etc/pihole/
+      - /srv/pihole/dnsmasq.d/:/etc/dnsmasq.d/
+    publish:
+      - "{{ ansible_host }}:53:53/udp"
+      - "67:67/udp"
+      - "8012:80/tcp"
+      - "12443:443/tcp"
+    env:
+      WEBPASSWORD: "{{ pihole_password }}"
+  notify: "restart pihole service"
+  environment:
+    PODMAN_SYSTEMD_UNIT: "container-pihole.service"

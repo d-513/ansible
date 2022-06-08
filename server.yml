@@ -1,8 +1,16 @@
 ---
 - hosts: archserver
   roles:
-    - { role: server }
-    - { role: caddy }
+    # - { role: server }
+    - base
+    - pihole
+    - caddy
+    - lldap
+    - mariadb
+    - redis
+    - authelia
+    - nextcloud
+    - vaultwarden
 
   module_defaults:
     containers.podman.podman_container:

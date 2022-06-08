@@ -6,12 +6,9 @@
   loop:
     - data
     - config
-    - config/static
-- set_fact:
-    caddy_image: docker.io/library/caddy:latest
+    - config/staticd
 - name: cloudflare ssl
   import_tasks: cloudflare_ssl.yml
-  when: cloudflare_ssl
 - name: template Caddyfile
   template:
     src: Caddyfile.j2
@@ -19,7 +16,7 @@
 - name: create caddy container
   containers.podman.podman_container:
     name: caddy
-    image: "{{ caddy_image }}"
+    image: "caddy-custom"
     network: web
     volumes:
       - /srv/caddy/data/:/data

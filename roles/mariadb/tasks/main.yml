@@ -1,0 +1,30 @@
+---
+- name: prepare dir
+  file:
+    path: "/srv/mariadb/{{ item }}"
+    state: directory
+  loop:
+    - data
+    - init
+- name: copy dbs
+  copy:
+    src: setup.sql
+    dest: /srv/mariadb/init/setup.sql
+- name: create mariadb container
+  containers.podman.podman_container:
+    name: mariadb
+    image: docker.io/library/mariadb:latest
+    network: web
+    publish:
+      - "3306:3306"
+    env:
+      MYSQL_ROOT_PASSWORD: "{{ mariadb_password }}"
+      MYSQL_USER: "sqluser"
+      MARIADB_AUTO_UPGRADE: "yes"
+      MYSQL_PASSWORD: "{{ mariadb_password }}"
+    volumes:
+      - /srv/mariadb/data:/var/lib/mysql
+      - /srv/mariadb/init:/docker-entrypoint-initdb.d
+  notify: "restart mariadb service"
+  environment:
+    PODMAN_SYSTEMD_UNIT: "container-mariadb.service"

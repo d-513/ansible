@@ -1,0 +1,10 @@
+# https://man.archlinux.org/man/containers-storage.conf.5
+[storage]
+
+driver = "{{ podman_storage_driver }}"
+
+{% if podman_storage_driver == "zfs" %}
+[storage.options.zfs]
+
+fsname = "{{ podman_zfs_fsname }}"
+{% endif %}

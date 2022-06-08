@@ -1,0 +1,17 @@
+---
+- name: prepare dir
+  file:
+    path: /srv/vaultwarden
+    state: directory
+- name: create bitwarden container
+  containers.podman.podman_container:
+    name: bitwarden
+    image: docker.io/vaultwarden/server:latest
+    network: web
+    env:
+      SIGNUPS_ALLOWED: "false"
+      WEBSOCKET_ENABLED: "true"
+    volumes: /srv/vaultwarden:/data
+  notify: "restart bitwarden service"
+  environment:
+    PODMAN_SYSTEMD_UNIT: "container-bitwarden.service"

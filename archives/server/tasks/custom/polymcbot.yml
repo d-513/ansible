@@ -1,0 +1,10 @@
+---
+- name: create polymcbot container
+  containers.podman.podman_container:
+    name: polymcbot
+    image: ghcr.io/polymc/bot:latest
+    env:
+      DISCORD_TOKEN: "{{ polymcbot_key }}"
+  notify: "restart polymcbot service"
+  environment:
+    PODMAN_SYSTEMD_UNIT: "container-polymcbot.service"
