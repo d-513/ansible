@@ -9,6 +9,5 @@ nextcloud_deploy: false
 lldap_deploy: false
 authelia_deploy: false
 redis_deploy: false
-postgres_deploy: false
-synapse_deploy: false
+homeassistant_deploy: false
 polymcbot_deploy: false

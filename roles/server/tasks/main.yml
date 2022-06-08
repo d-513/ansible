@@ -30,6 +30,8 @@
   when: authelia_deploy
 - include_tasks: services/nextcloud.yml
   when: nextcloud_deploy
+- include_tasks: services/homeassistant.yml
+  when: homeassistant_deploy
 # Custom
 - include_tasks: custom/polymcbot.yml
   when: polymcbot_deploy

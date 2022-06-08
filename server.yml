@@ -1,7 +1,9 @@
 ---
-- hosts: all
+- hosts: archserver
   roles:
     - { role: server }
+    - { role: caddy }
+
   module_defaults:
     containers.podman.podman_container:
       generate_systemd:

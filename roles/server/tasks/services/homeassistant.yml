@@ -1,0 +1,17 @@
+---
+- name: prepare dir
+  file:
+    path: "/srv/homeassistant/{{ item }}"
+    state: directory
+  loop:
+    - config
+- name: create homeassistant container
+  containers.podman.podman_container:
+    name: homeassistant
+    image: ghcr.io/home-assistant/home-assistant:stable
+    net: host
+    volumes: /srv/homeassistant/config:/config
+    privileged: yes
+  notify: "restart homeassistant service"
+  environment:
+    PODMAN_SYSTEMD_UNIT: "container-homeassistant.service"

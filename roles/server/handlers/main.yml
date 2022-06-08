@@ -59,6 +59,12 @@
     state: restarted
     enabled: true
     daemon_reload: true
+- name: "restart homeassistant service"
+  systemd:
+    name: "container-homeassistant.service"
+    state: restarted
+    enabled: true
+    daemon_reload: true
 - name: "restart polymcbot service"
   systemd:
     name: "container-polymcbot.service"

@@ -16,6 +16,8 @@
 	}
 	{% endif %}
 
+	@denied not remote_ip {{ v4_lan }}
+
 	{% if lldap_deploy == true %}
 	@lldap host users.{{ main_domain }}
 	handle @lldap {
@@ -49,13 +51,6 @@
 		redir /.well-known/carddav /remote.php/dav 301
 		redir /.well-known/caldav /remote.php/dav 301
 		reverse_proxy nextcloud:80
-	}
-	{% endif %}
-
-	{% if synapse_deploy == true %}
-	@mx host mx.{{ main_domain }}
-	handle @mx {
-		reverse_proxy synapse:8008
 	}
 	{% endif %}
 
