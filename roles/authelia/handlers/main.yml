@@ -1,0 +1,6 @@
+- name: "restart authelia service"
+  systemd:
+    name: "container-authelia.service"
+    state: restarted
+    enabled: true
+    daemon_reload: true

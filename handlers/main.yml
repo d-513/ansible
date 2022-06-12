@@ -1,0 +1,6 @@
+- name: "restart NAME service"
+  systemd:
+    name: "container-NAME.service"
+    state: restarted
+    enabled: true
+    daemon_reload: true

@@ -1,0 +1,6 @@
+- name: "restart bitwarden service"
+  systemd:
+    name: "container-bitwarden.service"
+    state: restarted
+    enabled: true
+    daemon_reload: true

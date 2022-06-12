@@ -10,3 +10,9 @@
   copy:
     src: uninstall-container.sh
     dest: /usr/local/bin/uninstall-container
+    mode: "755"
+- name: template notify script
+  template:
+    src: notify.sh.j2
+    dest: /usr/local/bin/notify
+    mode: "755"

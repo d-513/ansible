@@ -1,0 +1,6 @@
+- name: "restart flexo service"
+  systemd:
+    name: "container-flexo.service"
+    state: restarted
+    enabled: true
+    daemon_reload: true

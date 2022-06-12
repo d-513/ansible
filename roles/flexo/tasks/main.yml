@@ -1,0 +1,19 @@
+---
+- name: create dirs
+  file:
+    state: directory
+    path: "/srv/flexo/{{ item }}"
+  loop:
+    - cache
+- name: create flexo container
+  containers.podman.podman_container:
+    name: flexo
+    image: docker.io/nroi/flexo:latest
+    network: web
+    volumes:
+      - /srv/flexo/cache:/var/cache/flexo/pkg
+    env:
+      FLEXO_CUSTOM_REPO: "chaotic-aur@https://de-mirror.chaotic.cx archzfs@https://archzfs.com arm@http://de3.mirror.archlinuxarm.org"
+  notify: "restart flexo service"
+  environment:
+    PODMAN_SYSTEMD_UNIT: "container-flexo.service"

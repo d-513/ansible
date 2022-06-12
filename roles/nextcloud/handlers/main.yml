@@ -1,0 +1,6 @@
+- name: "restart nextcloud service"
+  systemd:
+    name: "container-nextcloud.service"
+    state: restarted
+    enabled: true
+    daemon_reload: true

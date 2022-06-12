@@ -41,6 +41,17 @@ dns.dns {
 		reverse_proxy nextcloud:80
 	}
 
+	@wg host wg.dns.dns
+	handle @wg {
+		reverse_proxy "http://192.168.10.250:8123"
+	}
+	
+	@flexo host pkg.dns.dns
+	handle @flexo {
+		respond @denied 403
+		reverse_proxy flexo:7878
+	}
+
 	handle {
 		respond "<h1>FAIL Unauthorized resource access attempt. This incident will be reported</h1>"
 	}

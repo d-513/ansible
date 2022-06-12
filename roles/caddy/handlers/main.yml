@@ -1,0 +1,6 @@
+- name: "restart caddy service"
+  systemd:
+    name: "container-caddy.service"
+    state: restarted
+    enabled: true
+    daemon_reload: true

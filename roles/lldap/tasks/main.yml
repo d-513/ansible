@@ -11,6 +11,7 @@
     name: lldap
     image: docker.io/nitnelave/lldap:latest
     network: web
+    ports: 3890:3890
     volumes:
       - /srv/lldap:/data
     env:

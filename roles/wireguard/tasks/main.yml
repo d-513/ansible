@@ -1,0 +1,70 @@
+---
+- name: prepare dirs
+  file:
+    path: /srv/wg-portal
+    state: directory
+- name: install wireguard
+  pacman:
+    name: wireguard-tools
+    state: present
+- name: check wireguard
+  stat:
+    path: /etc/wireguard/wg0.conf
+  register: st
+- name: template wireguard
+  when: "not st.stat.exists"
+  template:
+    src: wg0.conf.j2
+    dest: /etc/wireguard/wg0.conf
+- name: configure sysctl
+  copy:
+    src: 99-wg.conf
+    dest: /etc/sysctl.d/99-wg.conf
+- name: enable systemd wireguard
+  systemd:
+    service: wg-quick@wg0
+    state: started
+    enabled: yes
+    daemon_reload: yes
+- name: create wg-portal container
+  containers.podman.podman_container:
+    image: docker.io/h44z/wg-portal:latest
+    #image: ghcr.io/dada513/wg-portal-contrib:latest
+    name: wg-portal
+    network: host
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - /etc/wireguard:/etc/wireguard
+      - /srv/wg-portal:/app/data
+    env:
+      # WireGuard Settings
+      WG_DEVICES: wg0
+      WG_DEFAULT_DEVICE: wg0
+      WG_CONFIG_PATH: /etc/wireguard
+      # Core Settings
+      EXTERNAL_URL: "https://wg.{{ main_domain }}"
+      WEBSITE_TITLE: WireGuard VPN
+      COMPANY_NAME: home
+      ADMIN_USER: "admin@{{ main_domain }}"
+      ADMIN_PASS: "{{ wireguard_admin_password }}"
+      # LDAP Settings
+      LDAP_ENABLED: "true"
+      #CREATE_DEFAULT_PEER: "true"
+      LDAP_URL: ldap://192.168.10.225:3890
+      LDAP_BASEDN: "{{ lldap_base_dn }}"
+      LDAP_USER: "uid=admin,ou=people,{{ lldap_base_dn }}"
+      LDAP_PASSWORD: "{{ lldap_admin_password }}"
+      #LDAP_EVERYONE_ADMIN: "true"
+      #LDAP_LOGIN_FILTER: "(&(objectClass=person)(mail={{ '{{login_identifier}}' }}))"
+      #LDAP_LOGIN_FILTER: "(&(objectClass=person)(|(mail={{ '{{login_identifier}}' }})(uid={{ '{{login_identifier}}' }}))"
+      LDAP_LOGIN_FILTER: "(&(objectClass=person)(|(mail={{ '{{login_identifier}}' }})(uid={{ '{{login_identifier}}' }})))"
+      LDAP_SYNC_FILTER: "(&(objectClass=person)(mail=*))"
+      LDAP_ADMIN_GROUP: "uid=vpn,ou=groups,{{ lldap_base_dn }}"
+      LDAP_ATTR_EMAIL: "mail"
+      LDAP_STARTTLS: "false"
+      SELF_PROVISIONING: "true"
+      SESSION_SECRET: "{{ wireguard_session_secret }}"
+  environment:
+    PODMAN_SYSTEMD_UNIT: "container-wg-portal.service"
+  notify: restart wg-portal service

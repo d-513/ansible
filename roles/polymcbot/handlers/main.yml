@@ -1,0 +1,6 @@
+- name: "restart polymcbot service"
+  systemd:
+    name: "container-polymcbot.service"
+    state: restarted
+    enabled: true
+    daemon_reload: true

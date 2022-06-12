@@ -1,21 +1,8 @@
----
-- hosts: archserver
+- hosts: archpi
   roles:
-    # - { role: server }
-
     - base
-    #- wireguard
-    - pihole
-    - caddy
-    - lldap
-    - mariadb
-    - redis
-    - authelia
-    - nextcloud
-    - vaultwarden
-    - polymcbot
-    - flexo
-
+    - wireguard
+    - cloudflare-ddns
   module_defaults:
     containers.podman.podman_container:
       generate_systemd:

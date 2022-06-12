@@ -1,0 +1,7 @@
+---
+- name: "restart wg-portal service"
+  systemd:
+    name: "container-wg-portal.service"
+    state: restarted
+    enabled: true
+    daemon_reload: true

@@ -1,0 +1,6 @@
+- name: "restart lldap service"
+  systemd:
+    name: "container-lldap.service"
+    state: restarted
+    enabled: true
+    daemon_reload: true
