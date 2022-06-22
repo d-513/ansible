@@ -11,7 +11,9 @@ if [[ -z $1 ]]; then
   exit 1
 fi
 
+json=$(jq -n --arg chat_id "$TELEGRAM_CHATID" --arg text "$@" '{ $chat_id, $text }')
+echo $json
 curl -X POST \
    -H 'Content-Type: application/json' \
-   -d "{\"chat_id\": \"$TELEGRAM_CHATID\", \"text\": \"$@\"}" \
+   --data "$json" \
    https://api.telegram.org/bot$TELEGRAM_TOKEN/sendMessage

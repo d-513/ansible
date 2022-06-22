@@ -14,7 +14,6 @@
     - nextcloud
     - vaultwarden
     - polymcbot
-    - flexo
 
   module_defaults:
     containers.podman.podman_container:
