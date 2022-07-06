@@ -6,12 +6,12 @@
   loop:
     - data
     - config
-    - config/staticd
+    - config/static
 - name: cloudflare ssl
   import_tasks: cloudflare_ssl.yml
-- name: template Caddyfile
-  template:
-    src: Caddyfile.j2
+- name: copy Caddyfile
+  copy:
+    src: Caddyfile
     dest: /srv/caddy/Caddyfile
 - name: create caddy container
   containers.podman.podman_container:

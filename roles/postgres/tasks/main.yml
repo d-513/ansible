@@ -1,0 +1,28 @@
+---
+- name: prepare dir
+  file:
+    path: "/srv/postgres/{{ item }}"
+    state: directory
+  loop:
+    - data
+    - init
+- name: copy dbs
+  copy:
+    src: init.sh
+    dest: /srv/postgres/init/init.sh
+    mode: 0775
+- name: create postgres container
+  containers.podman.podman_container:
+    name: postgres
+    image: docker.io/library/postgres:14-alpine
+    network: web
+    publish:
+      - "5432:5432"
+    env:
+      POSTGRES_PASSWORD: "{{ postgres_password }}"
+    volumes:
+      - /srv/postgres/data:/var/lib/postgresql/data
+      - /srv/postgres/init:/docker-entrypoint-initdb.d
+  notify: "restart postgres service"
+  environment:
+    PODMAN_SYSTEMD_UNIT: "container-postgres.service"

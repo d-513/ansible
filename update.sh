@@ -1,4 +1,4 @@
 #!/bin/bash
-ssh root@arch.d513.space 'podman auto-update'
+ssh root@archserver.home 'podman auto-update'
 
 ansible-playbook server.yml -e rcr=ye

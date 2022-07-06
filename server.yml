@@ -4,13 +4,10 @@
     # - { role: server }
 
     - base
-    #- wireguard
-    - pihole
+    - postgres
     - caddy
-    - lldap
-    - mariadb
+    - keycloak
     - redis
-    - authelia
     - nextcloud
     - vaultwarden
     - polymcbot

@@ -43,7 +43,7 @@
       WG_DEFAULT_DEVICE: wg0
       WG_CONFIG_PATH: /etc/wireguard
       # Core Settings
-      EXTERNAL_URL: "https://wg.{{ main_domain }}"
+      EXTERNAL_URL: "https://wg.d513.space"
       WEBSITE_TITLE: WireGuard VPN
       COMPANY_NAME: home
       ADMIN_USER: "admin@{{ main_domain }}"

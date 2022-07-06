@@ -6,8 +6,6 @@
   loop:
     - pihole/config
     - pihole/dnsmasq.d
-    - gravity-sync/data
-    - gravity-sync/ssh
 - name: create pihole container
   containers.podman.podman_container:
     name: pihole

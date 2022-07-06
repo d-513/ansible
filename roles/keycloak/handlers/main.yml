@@ -1,6 +1,6 @@
-- name: "restart authelia service"
+- name: "restart keycloak service"
   systemd:
-    name: "container-authelia.service"
+    name: "container-keycloak.service"
     state: restarted
     enabled: true
     daemon_reload: true

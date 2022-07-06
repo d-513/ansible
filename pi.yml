@@ -1,6 +1,7 @@
 - hosts: archpi
   roles:
     - base
+    - pihole
     - wireguard
     - cloudflare-ddns
   module_defaults:
