@@ -17,10 +17,10 @@
     image: docker.io/library/nextcloud:latest
     network: web
     env:
-      MYSQL_HOST: "mariadb"
-      MYSQL_DATABASE: "nextcloud"
-      MYSQL_USER: "root"
-      MYSQL_PASSWORD: "{{ mariadb_password }}"
+      POSTGRES_HOST: "postgres"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "{{ postgres_password }}"
+      POSTGRES_DB: "nextcloud"
       REDIS_HOST: "redis"
       NEXTCLOUD_ADMIN_USER: "admin"
       NEXTCLOUD_ADMIN_PASSWORD: "{{ nextcloud_admin_password }}"

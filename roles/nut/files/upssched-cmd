@@ -1,0 +1,12 @@
+#!/bin/sh
+
+case "${1}" in
+  onbatt) notify "UPS on battery";;
+  online) notify "UPS power restored";;
+  shutdown)
+    notify "Shutting down. Goodbye"
+    sleep 2
+    sudo systemctl poweroff
+    ;;
+  *) logger -t upssched-cmd "Unrecognized command: $1";;
+esac

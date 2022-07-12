@@ -4,9 +4,9 @@
     # - { role: server }
 
     - base
+    - lldap
     - postgres
     - caddy
-    - keycloak
     - redis
     - nextcloud
     - vaultwarden

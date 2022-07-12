@@ -12,13 +12,6 @@
 
 	@denied not remote_ip {{ v4_lan }}
 
-	@lldap host users.d513.space
-	handle @lldap {
-		reverse_proxy lldap:17170 {
-			header_up X-Real-IP {remote_host}
-		}
-	}
-
 	@bw host bw.d513.space
 	handle @bw {
 		reverse_proxy /notifications/hub bitwarden:3012
@@ -43,17 +36,18 @@
 		dns cloudflare {env.CF_API_TOKEN}
 	}
 
+	@lldap host id.dogehub.eu
+	handle @lldap {
+		reverse_proxy lldap:17170 {
+			header_up X-Real-IP {remote_host}
+		}
+	}
+
 	@cloud host cloud.dogehub.eu
 	handle @cloud {
 		redir /.well-known/carddav /remote.php/dav 301
 		redir /.well-known/caldav /remote.php/dav 301
 		reverse_proxy nextcloud:80
-	}
-
-	@id host id.dogehub.eu
-	handle @id {
-		redir / /realms/DogeHub/account temporary
-		reverse_proxy keycloak:8080
 	}
 
 	handle {
