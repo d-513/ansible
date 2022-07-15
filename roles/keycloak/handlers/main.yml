@@ -1,6 +1,0 @@
-- name: "restart keycloak service"
-  systemd:
-    name: "container-keycloak.service"
-    state: restarted
-    enabled: true
-    daemon_reload: true
