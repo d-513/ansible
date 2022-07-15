@@ -36,6 +36,11 @@
 		dns cloudflare {env.CF_API_TOKEN}
 	}
 
+	@authelia host auth.dogehub.eu
+	handle @authelia {
+		reverse_proxy authelia:9091
+	}
+
 	@lldap host id.dogehub.eu
 	handle @lldap {
 		reverse_proxy lldap:17170 {

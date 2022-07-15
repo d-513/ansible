@@ -13,6 +13,11 @@
     image: docker.io/authelia/authelia:latest
     network: web
     volumes: /srv/authelia:/config
+    generate_systemd:
+      path: /etc/systemd/system
+      wants:
+        - container-mariadb.service
+        - container-redis.service
   notify: "restart authelia service"
   environment:
     PODMAN_SYSTEMD_UNIT: "container-authelia.service"

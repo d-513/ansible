@@ -2,4 +2,4 @@
 set -e
 
 createdb --encoding=UTF8 --owner=postgres --template=template0 nextcloud
-createdb --encoding=UTF8 --owner=postgres --template=template0 keycloak
+createdb --encoding=UTF8 --owner=postgres --template=template0 authelia

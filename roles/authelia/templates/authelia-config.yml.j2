@@ -4,7 +4,7 @@
 ###############################################################
 
 jwt_secret: "{{ authelia_jwt_secret }}"
-default_redirection_url: "https://auth.{{ main_domain }}"
+default_redirection_url: "https://auth.dogehub.eu"
 
 server:
   host: 0.0.0.0
@@ -15,7 +15,7 @@ log:
 # This secret can also be set using the env variables AUTHELIA_JWT_SECRET_FILE
 
 totp:
-  issuer: "{{ main_domain }}"
+  issuer: "dogehub.eu"
 
 # duo_api:
 #  hostname: api-123456789.example.com
@@ -52,7 +52,7 @@ session:
   secret: "{{ authelia_session_secret }}"
   expiration: 3600 # 1 hour
   inactivity: 300 # 5 minutes
-  domain: "{{ main_domain }}" # Should match whatever your root protected domain is
+  domain: "dogehub.eu" # Should match whatever your root protected domain is
   redis:
     host: redis
     port: 6379
@@ -64,10 +64,19 @@ regulation:
 
 notifier:
   disable_startup_check: false
-  filesystem:
-    filename: /config/notification.txt
+  smtp:
+    host: "{{ smtp_host }}"
+    port: "{{ smtp_port }}"
+    username: "{{ smtp_user }}"
+    password: "{{ smtp_password }}"
+    sender: "{{ smtp_sender }}"
+    identifier: "archserver"
+    subject: "[DogeHub Authelia] {title}"
 
 storage:
   encryption_key: "{{ authelia_storage_secret }}"
-  local:
-    path: /config/db.sqlite3
+  postgres:
+    host: postgres
+    username: postgres
+    password: "{{ postgres_password }}"
+    database: authelia

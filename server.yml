@@ -4,8 +4,9 @@
     # - { role: server }
 
     - base
-    - lldap
     - postgres
+    - authelia
+    - lldap
     - caddy
     - redis
     - nextcloud
