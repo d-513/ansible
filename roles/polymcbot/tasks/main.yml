@@ -6,5 +6,3 @@
     env:
       DISCORD_TOKEN: "{{ polymcbot_key }}"
   notify: "restart polymcbot service"
-  environment:
-    PODMAN_SYSTEMD_UNIT: "container-polymcbot.service"

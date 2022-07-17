@@ -13,5 +13,3 @@
       WEBSOCKET_ENABLED: "true"
     volumes: /srv/vaultwarden:/data
   notify: "restart bitwarden service"
-  environment:
-    PODMAN_SYSTEMD_UNIT: "container-bitwarden.service"

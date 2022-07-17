@@ -65,6 +65,4 @@
       LDAP_STARTTLS: "false"
       SELF_PROVISIONING: "true"
       SESSION_SECRET: "{{ wireguard_session_secret }}"
-  environment:
-    PODMAN_SYSTEMD_UNIT: "container-wg-portal.service"
   notify: restart wg-portal service

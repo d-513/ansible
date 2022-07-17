@@ -17,9 +17,11 @@
     containers.podman.podman_container:
       generate_systemd:
         path: /etc/systemd/system/
+        new: yes
       state: created
       recreate: "{{ 'yes' if rcr is defined else 'no' }}"
       timezone: "{{ podman_timezone }}"
       ipc: shareable
+      rm: yes
       labels:
         io.containers.autoupdate: registry

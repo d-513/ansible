@@ -15,9 +15,8 @@
     volumes: /srv/authelia:/config
     generate_systemd:
       path: /etc/systemd/system
+      new: yes
       wants:
         - container-mariadb.service
         - container-redis.service
   notify: "restart authelia service"
-  environment:
-    PODMAN_SYSTEMD_UNIT: "container-authelia.service"

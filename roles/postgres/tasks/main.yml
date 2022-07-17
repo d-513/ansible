@@ -24,5 +24,3 @@
       - /srv/postgres/data:/var/lib/postgresql/data
       - /srv/postgres/init:/docker-entrypoint-initdb.d
   notify: "restart postgres service"
-  environment:
-    PODMAN_SYSTEMD_UNIT: "container-postgres.service"

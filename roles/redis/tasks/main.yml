@@ -10,5 +10,3 @@
     network: web
     volumes: /srv/redis:/data
   notify: "restart redis service"
-  environment:
-    PODMAN_SYSTEMD_UNIT: "container-redis.service"
