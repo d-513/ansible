@@ -5,4 +5,5 @@
     image: ghcr.io/polymc/bot:latest
     env:
       DISCORD_TOKEN: "{{ polymcbot_key }}"
+      DISCORD_APP: "977174139297230888"
   notify: "restart polymcbot service"
