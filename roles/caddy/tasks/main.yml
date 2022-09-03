@@ -27,5 +27,6 @@
       - "443:443"
     env:
       CF_API_TOKEN: "{{ cloudflare_key }}"
+      V4_LAN: "{{ v4_lan }}"
     labels:
   notify: "restart caddy service"

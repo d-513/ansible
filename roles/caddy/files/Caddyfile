@@ -10,7 +10,7 @@
 		dns cloudflare {env.CF_API_TOKEN}
 	}
 
-	@denied not remote_ip {{ v4_lan }}
+	@denied not remote_ip {env.V4_LAN}
 
 	@bw host bw.d513.space
 	handle @bw {
@@ -53,6 +53,11 @@
 		redir /.well-known/carddav /remote.php/dav 301
 		redir /.well-known/caldav /remote.php/dav 301
 		reverse_proxy nextcloud:80
+	}
+
+	@hedgedoc host doc.dogehub.eu
+	handle @hedgedoc {
+		reverse_proxy hedgedoc:3000
 	}
 
 	handle {

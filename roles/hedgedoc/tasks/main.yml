@@ -1,0 +1,32 @@
+---
+- name: create dirs
+  file:
+    state: directory
+    path: /srv/hedgedoc
+- name: create hedgedoc container
+  containers.podman.podman_container:
+    name: hedgedoc
+    image: quay.io/hedgedoc/hedgedoc:latest
+    network: web
+    volumes:
+      - /srv/hedgedoc:/hedgedoc/public/uploads
+    env:
+      CMD_DB_URL: "postgres://postgres:{{ postgres_password }}@postgres:5432/hedgedoc"
+      CMD_LDAP_URL: "ldap://lldap:3890"
+      CMD_LDAP_BINDDN: "cn=admin,ou=people,{{ lldap_base_dn }}"
+      CMD_LDAP_BINDCREDENTIALS: "{{ lldap_admin_password }}"
+      CMD_LDAP_SEARCHBASE: "{{ lldap_base_dn }}"
+      CMD_LDAP_SEARCHFILTER: "(&(objectClass=person)(|(mail={{ '{{username}}' }})(uid={{ '{{username}}' }})))"
+      CMD_LDAP_PROVIDERNAME: "DogeHub ID"
+      CMD_LDAP_USERIDFIELD: "uid"
+      CMD_EMAIL: "false"
+      CMD_ALLOW_ANONYMOUS: "false"
+      CMD_DOMAIN: "doc.dogehub.eu"
+      CMD_PROTOCOL_USESSL: "true"
+      CMD_URL_ADDPORT: "false"
+    generate_systemd:
+      path: /etc/systemd/system
+      wants:
+        - container-postgres.service
+      new: yes
+  notify: "restart hedgedoc service"
