@@ -31,9 +31,7 @@
     generate_systemd:
       path: /etc/systemd/system
       wants:
-        - container-mariadb.service
+        - container-postgres.service
         - container-redis.service
       new: yes
   notify: "restart nextcloud service"
-  environment:
-    PODMAN_SYSTEMD_UNIT: "container-nextcloud.service"
