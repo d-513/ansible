@@ -1,0 +1,15 @@
+---
+- name: create dirs
+  file:
+    state: directory
+    path: /srv/changedetection
+- name: create changedetection container
+  containers.podman.podman_container:
+    name: changedetection
+    image: ghcr.io/dgtlmoon/changedetection.io:latest
+    network: web
+    volumes:
+      - /srv/changedetection:/datastore
+    env:
+      USE_X_SETTINGS: "true"
+  notify: "restart changedetection service"

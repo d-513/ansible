@@ -1,0 +1,6 @@
+- name: "restart changedetection service"
+  systemd:
+    name: "container-changedetection.service"
+    state: restarted
+    enabled: true
+    daemon_reload: true

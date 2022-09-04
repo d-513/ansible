@@ -5,12 +5,16 @@
 # 	root * /config/static
 # 	file_server
 # }
+(trusted_proxy_list) {
+       trusted_proxies 10.0.0.0/8
+}
+
 *.d513.space {
+	@denied not remote_ip 192.168.0.0/16
+
 	tls {
 		dns cloudflare {env.CF_API_TOKEN}
 	}
-
-	@denied not remote_ip {env.V4_LAN}
 
 	@bw host bw.d513.space
 	handle @bw {
@@ -24,6 +28,12 @@
 	@wg host wg.d513.space
 	handle @wg {
 		reverse_proxy "http://192.168.10.250:8123"
+	}
+
+	@cd host cd.d513.space
+	handle @cd {
+		abort @denied
+        reverse_proxy changedetection:5000
 	}
 
 	handle {
