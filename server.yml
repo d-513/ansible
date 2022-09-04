@@ -4,6 +4,7 @@
     # - { role: server }
 
     - base
+    - matrix
     - postgres
     - authelia
     - lldap
@@ -12,6 +13,8 @@
     - nextcloud
     - vaultwarden
     - polymcbot
+    - hedgedoc
+    - changedetection
 
   module_defaults:
     containers.podman.podman_container:

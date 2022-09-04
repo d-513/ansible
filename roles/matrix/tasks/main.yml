@@ -1,0 +1,116 @@
+---
+- name: create dirs
+  file:
+    path: "/srv/mx/{{ item }}"
+    state: directory
+  loop:
+    - synapse
+    - dimension
+    - whatsapp
+- name: check if config generated
+  stat:
+    path: /srv/mx/synapse/homeserver.yaml
+  register: hs_test
+- name: generate config
+  containers.podman.podman_container:
+    name: config-gen
+    image: docker.io/matrixdotorg/synapse:latest
+    generate_systemd: {}
+    rm: true
+    state: started
+    command: generate
+    volumes: /srv/mx/synapse:/data
+    env:
+      SYNAPSE_SERVER_NAME: "dogehub.eu"
+      SYNAPSE_REPORT_STATS: "no"
+  when: not hs_test.stat.exists
+- name: create caddy .well-known/matrix/server
+  file:
+    path: /srv/caddy/config/static/.well-known/matrix
+    state: directory
+- name: copy .well-known/matrix/server
+  copy:
+    src: matrix_server.json
+    dest: /srv/caddy/config/static/.well-known/matrix/server
+- name: copy .well-known/matrix/client
+  copy:
+    src: matrix_client.json
+    dest: /srv/caddy/config/static/.well-known/matrix/client
+- name: template homeserver.yaml
+  template:
+    src: homeserver.yaml.j2
+    dest: /srv/mx/synapse/homeserver.yaml
+- name: create synapse container
+  containers.podman.podman_container:
+    name: synapse
+    image: docker.io/matrixdotorg/synapse:latest
+    network: web
+    volumes: /srv/mx/synapse:/data
+    generate_systemd:
+      new: yes
+      path: /etc/systemd/system
+      wants:
+        - container-postgres.service
+  notify: "restart synapse service"
+- name: create synapse-admin container
+  containers.podman.podman_container:
+    name: synapse-admin
+    image: docker.io/awesometechnologies/synapse-admin:latest
+    network: web
+    env:
+      REACT_APP_SERVER: "https://mx.dogehub.eu"
+  notify: "restart synapse admin service"
+- name: template dimension config
+  template:
+    src: dimension.yml.j2
+    dest: /srv/mx/dimension/config.yaml
+- name: create matrix-dimension container
+  containers.podman.podman_container:
+    name: matrix-dimension
+    image: docker.io/turt2live/matrix-dimension:latest
+    network: web
+    volumes: /srv/mx/dimension:/data
+  notify: "restart matrix dimension service"
+- name: check if whatsapp config generated
+  stat:
+    path: /srv/mx/whatsapp/config.yaml
+  register: ws_test
+# === CONFIG GEN
+- name: copy mautrix-whatsapp config
+  copy:
+    src: whatsapp.yml
+    dest: /srv/mx/whatsapp/config.yaml
+  when: not ws_test.stat.exists
+- name: postgres creds in whatsapp config
+  lineinfile:
+    path: /srv/mx/whatsapp/config.yaml
+    search_string: "    uri:"
+    line: "    uri: postgres://postgres:{{ postgres_password }}@postgres/mautrix-whatsapp?sslmode=disable"
+  when: not ws_test.stat.exists
+- name: create mautrix-whatsapp generator container
+  containers.podman.podman_container:
+    name: mautrix-whatsapp
+    image: dock.mau.dev/mautrix/whatsapp:latest
+    network: web
+    volumes: /srv/mx/whatsapp:/data
+    generate_systemd: {}
+    rm: yes
+    state: started
+  when: not ws_test.stat.exists
+- name: wait for container to generate registration
+  wait_for:
+    path: /srv/mx/whatsapp/registration.yaml
+  when: not ws_test.stat.exists
+- name: copy registration to synapse
+  copy:
+    remote_src: yes
+    src: /srv/mx/whatsapp/registration.yaml
+    dest: /srv/mx/synapse/whatsapp-registration.yaml
+# ===
+- name: create mautrix-whatsapp container
+  containers.podman.podman_container:
+    name: mautrix-whatsapp
+    image: dock.mau.dev/mautrix/whatsapp:latest
+    network: web
+    volumes: /srv/mx/whatsapp:/data
+  notify: "restart mautrix whatsapp service"
