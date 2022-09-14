@@ -5,8 +5,9 @@
     state: directory
   loop:
     - synapse
-    - dimension
     - whatsapp
+    - discord
+    - facebook
 - name: check if config generated
   stat:
     path: /srv/mx/synapse/homeserver.yaml
@@ -60,22 +61,11 @@
     env:
       REACT_APP_SERVER: "https://mx.dogehub.eu"
   notify: "restart synapse admin service"
-- name: template dimension config
-  template:
-    src: dimension.yml.j2
-    dest: /srv/mx/dimension/config.yaml
-- name: create matrix-dimension container
-  containers.podman.podman_container:
-    name: matrix-dimension
-    image: docker.io/turt2live/matrix-dimension:latest
-    network: web
-    volumes: /srv/mx/dimension:/data
-  notify: "restart matrix dimension service"
 - name: check if whatsapp config generated
   stat:
     path: /srv/mx/whatsapp/config.yaml
   register: ws_test
-# === CONFIG GEN
+# === CONFIG GENERATOR START ===
 - name: copy mautrix-whatsapp config
   copy:
     src: whatsapp.yml
@@ -106,11 +96,110 @@
     remote_src: yes
     src: /srv/mx/whatsapp/registration.yaml
     dest: /srv/mx/synapse/whatsapp-registration.yaml
-# ===
+# === CONFIG GENERATOR END ===
 - name: create mautrix-whatsapp container
   containers.podman.podman_container:
     name: mautrix-whatsapp
     image: dock.mau.dev/mautrix/whatsapp:latest
     network: web
     volumes: /srv/mx/whatsapp:/data
+    generate_systemd:
+      path: /etc/systemd/system
+      wants:
+        - container-synapse.service
+      new: yes
   notify: "restart mautrix whatsapp service"
+- name: check if discord config generated
+  stat:
+    path: /srv/mx/discord/config.yaml
+  register: dc_test
+# === CONFIG GENERATOR START ===
+- name: copy mautrix-discord config
+  copy:
+    src: discord.yml
+    dest: /srv/mx/discord/config.yaml
+  when: not dc_test.stat.exists
+- name: postgres creds in discord config
+  lineinfile:
+    path: /srv/mx/discord/config.yaml
+    search_string: "    uri:"
+    line: "    uri: postgres://postgres:{{ postgres_password }}@postgres/mautrix-discord?sslmode=disable"
+  when: not dc_test.stat.exists
+- name: create mautrix-discord generator container
+  containers.podman.podman_container:
+    name: mautrix-discord
+    image: dock.mau.dev/mautrix/discord:latest
+    network: web
+    volumes: /srv/mx/discord:/data
+    generate_systemd: {}
+    rm: yes
+    state: started
+  when: not dc_test.stat.exists
+- name: wait for container to generate registration
+  wait_for:
+    path: /srv/mx/discord/registration.yaml
+  when: not dc_test.stat.exists
+- name: copy registration to synapse
+  copy:
+    remote_src: yes
+    src: /srv/mx/discord/registration.yaml
+    dest: /srv/mx/synapse/discord-registration.yaml
+# === CONFIG GENERATOR END ===
+# DISCORD
+- name: create mautrix-discord container
+  containers.podman.podman_container:
+    name: mautrix-discord
+    image: dock.mau.dev/mautrix/discord:latest
+    network: web
+    volumes: /srv/mx/discord:/data
+    generate_systemd:
+      path: /etc/systemd/system
+      wants:
+        - container-synapse.service
+      new: yes
+  notify: "restart mautrix discord service"
+# /DISCORD
+# === CONFIG GENERATOR START ===
+- name: check if facebook config generated
+  stat:
+    path: /srv/mx/facebook/config.yaml
+  register: fb_test
+- name: template mautrix-facebook config
+  template:
+    src: facebook.yml.j2
+    dest: /srv/mx/facebook/config.yaml
+  when: not fb_test.stat.exists
+- name: create mautrix-facebook generator container
+  containers.podman.podman_container:
+    name: mautrix-facebook
+    image: dock.mau.dev/mautrix/facebook:latest
+    network: web
+    volumes: /srv/mx/facebook:/data
+    generate_systemd: {}
+    rm: yes
+    state: started
+  when: not fb_test.stat.exists
+- name: wait for container to generate registration
+  wait_for:
+    path: /srv/mx/facebook/registration.yaml
+  when: not fb_test.stat.exists
+- name: copy registration to synapse
+  copy:
+    remote_src: yes
+    src: /srv/mx/facebook/registration.yaml
+    dest: /srv/mx/synapse/facebook-registration.yaml
+# === CONFIG GENERATOR END ===
+# FACEBOOK
+- name: create mautrix-facebook container
+  containers.podman.podman_container:
+    name: mautrix-facebook
+    image: dock.mau.dev/mautrix/facebook:latest
+    network: web
+    volumes: /srv/mx/facebook:/data
+    generate_systemd:
+      path: /etc/systemd/system
+      wants:
+        - container-synapse.service
+      new: yes
+  notify: "restart mautrix facebook service"
+# /FACEBOOK

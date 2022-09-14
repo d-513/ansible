@@ -110,11 +110,6 @@ dogehub.eu {
 		reverse_proxy synapse:8008
 	}
 
-	@dimension host dimension.dogehub.eu
-	handle @dimension {
-		reverse_proxy matrix-dimension:8184
-	}
-
 	handle {
 		respond "<h1>Nothing here yet ._.</h1>"
 	}

@@ -44,7 +44,7 @@
       WG_CONFIG_PATH: /etc/wireguard
       # Core Settings
       EXTERNAL_URL: "https://wg.d513.space"
-      WEBSITE_TITLE: WireGuard VPN
+      WEBSITE_TITLE: "WireGuard VPN"
       COMPANY_NAME: home
       ADMIN_USER: "admin@d513.space"
       ADMIN_PASS: "{{ wireguard_admin_password }}"

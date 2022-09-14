@@ -10,15 +10,21 @@
     state: restarted
     enabled: true
     daemon_reload: true
-- name: "restart matrix dimension service"
-  systemd:
-    name: "container-matrix-dimension.service"
-    state: restarted
-    enabled: true
-    daemon_reload: true
 - name: "restart mautrix whatsapp service"
   systemd:
     name: "container-mautrix-whatsapp.service"
+    state: restarted
+    enabled: true
+    daemon_reload: true
+- name: "restart mautrix discord service"
+  systemd:
+    name: "container-mautrix-discord.service"
+    state: restarted
+    enabled: true
+    daemon_reload: true
+- name: "restart mautrix facebook service"
+  systemd:
+    name: "container-mautrix-facebook.service"
     state: restarted
     enabled: true
     daemon_reload: true
