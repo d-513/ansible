@@ -1,10 +1,8 @@
 # ansible-dada513
 
+Please see https://gitlab.dogehub.eu/ansible for more updated version, everything is getting redone right now in separate repos
+
 my ansible scripts for deploying serveral things
-
-### `roles/server`
-
-This is the main role for deploying FOSS well-known selfhosted applications.  
 Features:
 
 - Podman
@@ -12,15 +10,3 @@ Features:
 - Formatted meta
 - Easy config for services
 - Not hardcoded - setup flexible
-
-Services:
-
-- Caddy
-- Pi-Hole
-- Vaultwarden
-- Cloudflare DDNS
-- LLDAP
-- Mariadb
-- Nextcloud
-- Authelia
-- Postgres
